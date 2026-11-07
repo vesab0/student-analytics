@@ -1,0 +1,16 @@
+import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+// Proxies /api/* to the FastAPI backend so no CORS setup is needed in dev.
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    proxy: {
+      '/api': {
+        target: process.env.VITE_API_URL ?? 'http://localhost:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
+})
